@@ -1,10 +1,10 @@
-package coyote
+package coyote_go
 
 import "testing"
 
 func TestGetKnownResult(t *testing.T) {
     Log("hello!");
     if false != true {
-        t.Error("Known result not received, test failed.")
+        t.Error("test failed.")
     }
 }
