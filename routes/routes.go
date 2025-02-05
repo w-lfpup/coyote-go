@@ -1,4 +1,4 @@
-package coyote
+package routes
 
 type StepKind int
 

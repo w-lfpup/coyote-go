@@ -2,8 +2,8 @@ package coyote
 
 import "testing"
 
-func TestGetKnownResult(t *testing.T) {
-	var result = Blep("hello!")
+func TesBlep(t *testing.T) {
+	var result = Blep("blepp!!")
 	if nil == &result {
 		t.Error("test failed.")
 	}
