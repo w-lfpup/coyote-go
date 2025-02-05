@@ -1,0 +1,23 @@
+  # Tests -> Build _always_ fails
+  # - go build echoes out files? which not a valid status code?
+  
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+      - name: Format
+        run: go fmt ./...
+      - name: Build
+        run: go build ./...
+      - name: Test
+        run: go test ./...
