@@ -1,4 +1,4 @@
-package rulesets
+package coyote
 
 type RulesetInterface interface {
 	GetInitialNamespace() string

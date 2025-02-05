@@ -1,10 +1,10 @@
-package coyote_go
+package coyote
 
 import "testing"
 
 func TestGetKnownResult(t *testing.T) {
-    Log("hello!");
-    if false != true {
-        t.Error("test failed.")
-    }
+	var result = Blep("hello!")
+	if nil == &result {
+		t.Error("test failed.")
+	}
 }

@@ -1,5 +1,5 @@
   # Tests -> Build _always_ fails
-  # - go build echoes out files? which is a valid status code?
+  # - go build echoes out files? which not a valid status code?
   
 name: Tests
 
@@ -17,7 +17,6 @@ jobs:
       - uses: actions/setup-go@v5
       - name: Build
         run: go build ./...
-        continue-on-error: true
       - name: Test
         run: go test ./...
       

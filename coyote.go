@@ -1,9 +1,7 @@
-package coyote_go
+package coyote
 
-import (
- "fmt"
-)
-      
-func Log(mess string) {
-	fmt.Println("[LOG] " + mess)
+import ()
+
+func Blep(message string) string {
+	return message
 }
