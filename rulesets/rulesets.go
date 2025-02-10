@@ -4,7 +4,7 @@ type RulesetInterface interface {
 	GetInitialNamespace() string
 	TagIsComment(string) bool
 	GetCloseSequenceFromAltTextTag(string) string
-	GetTagFromCloseSequence(string) string
+	GetAltTextTagFromCloseSequence(string) string
 	RespectIndentation(string) bool
 	TagIsBannedEl(string) bool
 	TagIsVoidEl(string) bool
@@ -13,6 +13,7 @@ type RulesetInterface interface {
 	TagIsInlineEl(string) bool
 }
 
+// Html for server side
 type ServerRules struct{}
 
 func (s ServerRules) GetInitialNamespace() string {
@@ -23,6 +24,41 @@ func (s ServerRules) TagIsComment(tag string) bool {
 	return "!--" == tag
 }
 
+func (s ServerRules) GetCloseSequenceFromAltTextTag(tag string) string {
+	return getCloseSequenceFromAltTextTag(tag)
+}
+
+func (s ServerRules) GetAltTextTagFromCloseSequence(tag string) string {
+	return getAltTagFromCloseSequence(tag)
+}
+
+func (s ServerRules) RespectIndentation(tag string) bool {
+	return true
+}
+
+func (s ServerRules) TagIsBannedEl(tag string) bool {
+	return isBannedEl(tag)
+}
+
+func (s ServerRules) TagIsVoidEl(tag string) bool {
+	return isVoidEl(tag)
+}
+
+func (s ServerRules) TagIsNamespaceEl(tag string) bool {
+	return isNamespaceEl(tag)
+}
+
+func (s ServerRules) TagIsPreservedTextEl(tag string) bool {
+	return isPreservedTextEl(tag)
+}
+
+func (s ServerRules) TagIsInlineEl(tag string) bool {
+	return isInlineEl(tag)
+}
+
+// Html for client side
+//
+//	(no elements that can directly manipulate dom)
 type ClientRules struct{}
 
 func (c ClientRules) GetInitialNamespace() string {
@@ -33,6 +69,54 @@ func (s ClientRules) TagIsComment(tag string) bool {
 	return "!--" == tag
 }
 
+func (s ClientRules) GetCloseSequenceFromAltTextTag(tag string) string {
+	return getCloseSequenceFromAltTextTag(tag)
+}
+
+func (s ClientRules) GetAltTextTagFromCloseSequence(tag string) string {
+	return getAltTagFromCloseSequence(tag)
+}
+
+func (s ClientRules) RespectIndentation(tag string) bool {
+	return false
+}
+
+func (s ClientRules) TagIsBannedEl(tag string) bool {
+	switch tag {
+	case "!--":
+		return true
+	case "link":
+		return true
+	case "script":
+		return true
+	case "style":
+		return true
+	default:
+		return isBannedEl(tag)
+	}
+}
+
+func (s ClientRules) TagIsVoidEl(tag string) bool {
+	return isVoidEl(tag)
+}
+
+func (s ClientRules) TagIsNamespaceEl(tag string) bool {
+	return isNamespaceEl(tag)
+}
+
+func (s ClientRules) TagIsPreservedTextEl(tag string) bool {
+	return isPreservedTextEl(tag)
+}
+
+func (s ClientRules) TagIsInlineEl(tag string) bool {
+	if "a" == tag {
+		return true
+	}
+
+	return isInlineEl(tag)
+}
+
+// Xml
 type XmlRules struct{}
 
 func (x XmlRules) GetInitialNamespace() string {
@@ -54,7 +138,7 @@ func (s XmlRules) GetCloseSequenceFromTag(tag string) string {
 	}
 }
 
-func (s XmlRules) GetTagFromCloseSequence(tag string) string {
+func (s XmlRules) GetAltTextTagFromCloseSequence(tag string) string {
 	switch tag {
 	case "-->":
 		return "!--"
@@ -87,6 +171,33 @@ func (s XmlRules) TagIsPreservedTextEl(tag string) bool {
 
 func (s XmlRules) TagIsInlineEl(tag string) bool {
 	return false
+}
+
+// Utils
+func getCloseSequenceFromAltTextTag(tag string) string {
+	switch tag {
+	case "!--":
+		return "-->"
+	case "script":
+		return "</script>"
+	case "style":
+		return "</style>"
+	default:
+		return ""
+	}
+}
+
+func getAltTagFromCloseSequence(tag string) string {
+	switch tag {
+	case "-->":
+		return "!--"
+	case "</script>":
+		return "script"
+	case "</style>":
+		return "style"
+	default:
+		return ""
+	}
 }
 
 func isBannedEl(tag string) bool {
