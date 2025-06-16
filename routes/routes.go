@@ -34,10 +34,6 @@ const (
 	Element
 	Tag
 	Text
-	// needed for comments and scripts
-	AltText
-	AltTextCloseSequence
-	CommentText
 )
 
 func Route(glyph rune, prevKind StepKind) StepKind {
